@@ -6,7 +6,7 @@ const Photos = () => {
   const [photos, setPhotos] = useState([]);
   const [sort, setSort] = useState("asc");
   const [submited, setSubmited] = useState("");
-  const [search, setSearch] = useState("");
+  const [search] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
