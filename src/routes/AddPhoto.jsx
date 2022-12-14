@@ -1,0 +1,88 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+const AddPhoto = () => {
+  const [imageUrl, setImageUrl] = useState("");
+  const [captions, setCaptions] = useState("");
+  const [secret, setSecret] = useState("");
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
+
+  const addPhoto = (e) => {
+    e.preventDefault();
+
+    try {
+      fetch("https://gallery-app-server.vercel.app/photos", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          imageUrl: imageUrl,
+          captions: captions,
+          createdAt: `-`,
+          updatedAt: `-`,
+          secret: secret,
+        }),
+      })
+        .then((res) => res.json())
+        .then((e) => {
+          secret === "password" ? navigate("/photos") : setError(e.error);
+        });
+    } catch (error) {
+      setError(error);
+    }
+  };
+  console.info("test");
+  return (
+    <>
+      <div className="container">
+        {error && <div className="error-msg">{error}</div>}
+        <div>Mau tahu banget</div>
+        <form className="add-form" onSubmit={(e) => addPhoto(e)}>
+          <label>
+            Image Url:
+            <input
+              className="add-input"
+              type="text"
+              data-testid="imageUrl"
+              value={imageUrl}
+              onChange={(e) => setImageUrl(e.target.value)}
+              name="imgURL"
+            />
+          </label>
+          <label>
+            Captions:
+            <input
+              className="add-input"
+              name="caps"
+              type="text"
+              data-testid="captions"
+              value={captions}
+              onChange={(e) => setCaptions(e.target.value)}
+            />
+          </label>
+          <label>
+            Secret:
+            <input
+              className="add-input"
+              type="text"
+              value={secret}
+              data-testid="secret"
+              name="secret"
+              onChange={(e) => setSecret(e.target.value)}
+            />
+          </label>
+          <input
+            className="submit-btn"
+            type="submit"
+            value="Submit"
+            data-testid="submit"
+          />
+        </form>
+      </div>
+    </>
+  );
+};
+
+export default AddPhoto;
